@@ -45,7 +45,10 @@ async function handler(request: Request): Promise<Response> {
     return new Response("Not Found", { status: 404 });
   }
 
-  const targetUrlString = path.slice(prefix.length);
+  // Combine the path after prefix with any query string
+  // This handles URLs like /v0/https://api.example.com/path?param=value
+  // where ?param=value gets parsed as the proxy request's search params
+  const targetUrlString = path.slice(prefix.length) + requestUrl.search;
 
   let targetUrl: URL;
   try {
